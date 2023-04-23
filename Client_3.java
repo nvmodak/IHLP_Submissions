@@ -19,8 +19,10 @@ public class Client_3 {
 	private ArrayList<Integer> cardsAvailable = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13));
 
  // constructor to put ip address and port
- public Client_3(String address, int port)
+ public Client_3(String address, int port) throws InterruptedException
  {
+	 int retryToConnectToServer = 10;
+	 do {
      // establish a connection
      try {
          socket = new Socket(address, port);
@@ -35,15 +37,31 @@ public class Client_3 {
          
          inputSocket = new DataInputStream(
 					new BufferedInputStream(socket.getInputStream()));
+         break;
+        }
+        catch (ConnectException  u) {
+       	 System.out.println("In Connection Exception");
+            System.out.println(u);
+        }
+        catch (SocketTimeoutException   u) {
+       	 System.out.println("In SocketTimeoutException Exception");
+            System.out.println(u);
+        }
+        catch (IOException i) {
+       	 System.out.println("In IOException Exception");
+            System.out.println(i);
+            return;
+        }
+     System.out.println("Retrying to connect to server");
+     Thread.sleep(2000);
+     
+     retryToConnectToServer--;
+     if(retryToConnectToServer == 0)
+     {
+    	 System.out.println("Unable to connect to server, Check if server is started. Terminating !");
+    	 return ;
      }
-     catch (UnknownHostException u) {
-         System.out.println(u);
-         return;
-     }
-     catch (IOException i) {
-         System.out.println(i);
-         return;
-     }
+   	 }while(retryToConnectToServer > 0);
 
      // string to read message from input
      String line = "";
@@ -123,7 +141,7 @@ public class Client_3 {
 	 return card;
  }
 
-public static void main(String args[])
+public static void main(String args[]) throws InterruptedException
  {
      Client_3 client = new Client_3("127.0.0.1", 5003);
  }
