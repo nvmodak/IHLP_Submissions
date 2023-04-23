@@ -55,7 +55,7 @@ public class Client_1 {
 				System.out.println("Turn - " + iFetchCards);
 				String dataReceived = this.GetServerInput(inputSocket);
 				System.out.println("data received from server " + dataReceived);
-				int advertisedCardFromServer = Integer.parseInt(dataReceived);
+				String advertisedCardFromServer = (dataReceived);
 				System.out.println("Server has Selected Card " + advertisedCardFromServer +" of Spades");
 			    Random random = new Random();
 			    int cardIndex = random.nextInt(totalCards_Available);
@@ -98,13 +98,13 @@ public class Client_1 {
 		card = "Ace";
 		break;
 	case 11: 
-		card = "Ace";
+		card = "Jack";
 		break;
 	case 12: 
-		card = "Ace";
+		card = "Queen";
 		break;
 	case 13: 
-		card = "Ace";
+		card = "King";
 		break;
 	
 	default:

@@ -78,9 +78,70 @@ public class Server
 			return "";
 		}
 	}
-	
+	 private String convertToCardsString(Integer cardSelected)
+	 {
+		 String card = "";
+		 switch (cardSelected) {
+		case 1: 
+			card = "Ace";
+			break;
+		case 11: 
+			card = "Jack";
+			break;
+		case 12: 
+			card = "Queen";
+			break;
+		case 13: 
+			card = "King";
+			break;
+		
+		default:
+			card = cardSelected.toString();
+		}
+		 return card;
+	 }
+	 private Integer convertToCardsInteger(String cardStringRecv)
+	 {
+		 Integer card;
+		 switch (cardStringRecv) {
+		case "Ace": 
+			card = 1;
+			break;
+		case "Jack": 
+			card = 11;
+			break;
+		case "Queen": 
+			card = 12;
+			break;
+		case "King": 
+			card = 13;
+			break;
+		
+		default:
+			card = Integer.parseInt(cardStringRecv);
+		}
+		 return card;
+	 }
+	 
+	 private void printClientOutput(String dataRecvd, int clientNumber)
+	 {
+		 String cardType = "";
+		 switch (clientNumber) {
+		case 1: 
+			cardType ="Hearts";
+			break;
+		case 2: 
+			cardType ="Diamonds";
+			break;
+		case 3: 
+			cardType ="Clubs";
+			break;
+		}
+		 System.out.println("Server has received " + dataRecvd +" of " + cardType + " from client " + clientNumber);
+	 }
 	private void startPlaying()
 	{
+		
 		
 		
 		
@@ -91,23 +152,24 @@ public class Server
 			
 		    Random random = new Random();
 		    int cardIndex = random.nextInt(totalCards_Available);
-		    System.out.println("Random Card selected  " + cardIndex);
 		    Integer cardSelected = cardsAvailable.get(cardIndex);
 		    cardsAvailable.remove(cardIndex);
+		    String card = convertToCardsString(cardSelected);
 		    String dataReceived = "";
 		    int clientOneCardSelected = 0;
 		    int clientTwoCardSelected = 0;
 		    int clientThreeCardSelected = 0;
-		    System.out.println("Selected card is " + cardSelected);
+		    System.out.println("Selected card is " + card);
 		    // Send and receive data from client
 		    System.out.println("Client 1 dealing");
-		    this.sendDataToClients(0, cardSelected.toString());
+		    this.sendDataToClients(0, card);
 		    dataReceived = this.getDataFromClients(0);
-		    System.out.println(dataReceived);
-		    clientOneCardSelected = Integer.parseInt(dataReceived);
+		    this.printClientOutput(dataReceived, 1);
+		    //clientOneCardSelected = Integer.parseInt(dataReceived);
+		    clientOneCardSelected = this.convertToCardsInteger(dataReceived);
 		    if(clientOneSelectionList.contains(clientOneCardSelected))
 		    {
-		    	System.out.println("Got duplicate input from the client " + 0 + "Aborting");
+		    	System.out.println("Got duplicate input from the client " + 1 + "Aborting");
 		    	return;
 		    }
 		    clientOneSelectionList.add(clientOneCardSelected);
@@ -116,25 +178,28 @@ public class Server
 		    System.out.println("Client 2 dealing");
 		    this.sendDataToClients(1, cardSelected.toString());
 		    dataReceived = this.getDataFromClients(1);
-		    System.out.println(dataReceived);
-		    clientTwoCardSelected = Integer.parseInt(dataReceived);
-		    if(clientOneSelectionList.contains(clientTwoCardSelected))
+		    this.printClientOutput(dataReceived, 2);
+		    //clientTwoCardSelected = Integer.parseInt(dataReceived);
+		    clientTwoCardSelected = this.convertToCardsInteger(dataReceived);
+		    if(clientTwoSelectionList.contains(clientTwoCardSelected))
 		    {
-		    	System.out.println("Got duplicate input from the client " + 0 + "Aborting");
+		    	System.out.println("Got duplicate input from the client " + 2 + "Aborting");
 		    	return;
 		    }
+		    clientTwoSelectionList.add(clientTwoCardSelected);
 		    
 		    System.out.println("Client 3 dealing");
 		    this.sendDataToClients(2, cardSelected.toString());
 		    dataReceived = this.getDataFromClients(2);
-		    System.out.println(dataReceived);
-		    clientThreeCardSelected = Integer.parseInt(dataReceived);
-		    if(clientOneSelectionList.contains(clientThreeCardSelected))
+		    this.printClientOutput(dataReceived, 3);
+		    //clientThreeCardSelected = Integer.parseInt(dataReceived);
+		    clientThreeCardSelected = this.convertToCardsInteger(dataReceived);
+		    if(clientThreeSelectionList.contains(clientThreeCardSelected))
 		    {
-		    	System.out.println("Got duplicate input from the client " + 0 + "Aborting");
+		    	System.out.println("Got duplicate input from the client " + 3 + "Aborting");
 		    	return;
 		    }   
-		    
+		    clientThreeSelectionList.add(clientThreeCardSelected);
 		    
 		    int maxNumber = clientOneCardSelected > clientTwoCardSelected ? clientOneCardSelected : clientTwoCardSelected;
 		    maxNumber = maxNumber > clientThreeCardSelected ? maxNumber : clientThreeCardSelected;

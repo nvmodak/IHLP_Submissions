@@ -60,10 +60,11 @@ public class Client_2 {
 			    Random random = new Random();
 			    int cardIndex = random.nextInt(totalCards_Available);
 			    Integer cardSelected = cardsAvailable.get(cardIndex);
-			    System.out.println("selected Card is " + cardSelected +" of Hearts");
+			    System.out.println("selected Card is " + cardSelected +" of Diamonds");
+			    String card = convertToCardsString(cardSelected);
          try {
              //line = input.readLine();
-        	 outSocket.writeUTF(cardSelected.toString());
+        	 outSocket.writeUTF(card);
          }
          catch (IOException i) {
              System.out.println(i);
@@ -85,6 +86,28 @@ public class Client_2 {
      catch (IOException i) {
          System.out.println(i);
      }
+ }
+ private String convertToCardsString(Integer cardSelected)
+ {
+	 String card = "";
+	 switch (cardSelected) {
+	case 1: 
+		card = "Ace";
+		break;
+	case 11: 
+		card = "Jack";
+		break;
+	case 12: 
+		card = "Queen";
+		break;
+	case 13: 
+		card = "King";
+		break;
+	
+	default:
+		card = cardSelected.toString();
+	}
+	 return card;
  }
 
  private String GetServerInput(DataInputStream inputStream) {
