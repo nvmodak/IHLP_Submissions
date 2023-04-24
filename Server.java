@@ -149,7 +149,7 @@ public class Server
 		int totalCards_Available = 13;
 		for(int iFetchCards = 1; iFetchCards <= 13; iFetchCards++, totalCards_Available -- ) 
 		{
-			
+		    System.out.println("\n\n");	
 		    Random random = new Random();
 		    int cardIndex = random.nextInt(totalCards_Available);
 		    Integer cardSelected = cardsAvailable.get(cardIndex);
@@ -159,7 +159,7 @@ public class Server
 		    int clientOneCardSelected = 0;
 		    int clientTwoCardSelected = 0;
 		    int clientThreeCardSelected = 0;
-		    System.out.println("Selected card is " + card);
+		    System.out.println("Server has selected card is " + card);
 		    // Send and receive data from client
 		    System.out.println("Client 1 dealing");
 		    this.sendDataToClients(0, card);
