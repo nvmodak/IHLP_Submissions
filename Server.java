@@ -141,15 +141,12 @@ public class Server
 	 }
 	private void startPlaying()
 	{
-		
-		
-		
-		
-		
 		int totalCards_Available = 13;
 		for(int iFetchCards = 1; iFetchCards <= 13; iFetchCards++, totalCards_Available -- ) 
 		{
-		    System.out.println("\n\n");	
+		    System.out.println("\n\n**************");
+		    System.out.println("    Round :- " + iFetchCards +"    ");
+		    System.out.println("**************\n\n");
 		    Random random = new Random();
 		    int cardIndex = random.nextInt(totalCards_Available);
 		    Integer cardSelected = cardsAvailable.get(cardIndex);
@@ -160,8 +157,7 @@ public class Server
 		    int clientTwoCardSelected = 0;
 		    int clientThreeCardSelected = 0;
 		    System.out.println("Server has selected card is " + card + " of Spades");
-		    // Send and receive data from client
-		    System.out.println("Client 1 dealing");
+
 		    this.sendDataToClients(0, card);
 		    dataReceived = this.getDataFromClients(0);
 		    this.printClientOutput(dataReceived, 1);
@@ -175,7 +171,7 @@ public class Server
 		    clientOneSelectionList.add(clientOneCardSelected);
 		    
 		    
-		    System.out.println("Client 2 dealing");
+		  
 		    this.sendDataToClients(1, cardSelected.toString());
 		    dataReceived = this.getDataFromClients(1);
 		    this.printClientOutput(dataReceived, 2);
@@ -188,7 +184,7 @@ public class Server
 		    }
 		    clientTwoSelectionList.add(clientTwoCardSelected);
 		    
-		    System.out.println("Client 3 dealing");
+		
 		    this.sendDataToClients(2, cardSelected.toString());
 		    dataReceived = this.getDataFromClients(2);
 		    this.printClientOutput(dataReceived, 3);
@@ -206,19 +202,27 @@ public class Server
 		    
 		    if(maxNumber == clientOneCardSelected)
 		    {
+		    	System.out.println("Client 1 has max score in round " + iFetchCards);
 		    	this.clientOneScore += cardSelected;
 		    }
 		    if(maxNumber == clientTwoCardSelected)
 		    {
+		    	System.out.println("Client 2 has max score in round " + iFetchCards);
 		    	this.clientTwoScore += cardSelected;
 		    }
 		    if(maxNumber == clientThreeCardSelected)
 		    {
+		    	System.out.println("Client 2 has max score in round " + iFetchCards);
 		    	this.clientThreeScore += cardSelected;
 		    }
 		    
+		    System.out.println("Scores of clients are as follows ");
+		    System.out.println("Client 1 :- " + this.clientOneScore);
+		    System.out.println("Client 2 :- " + this.clientTwoScore);
+		    System.out.println("Client 3 :- " + this.clientThreeScore);
 		    
 		}
+		
 		Integer maxScoreClientNumber = 0;
 		Integer maxClientScore = 0;
 		if(this.clientOneScore > this.clientTwoScore)
@@ -237,20 +241,52 @@ public class Server
 			maxScoreClientNumber = 3;
 		}
 		
-		this.sendDataToClients(0,  "Winner is Client Number " + maxScoreClientNumber.toString() + "and score" + maxClientScore.toString());
-		this.sendDataToClients(1,  "Winner is Client Number " + maxScoreClientNumber.toString() + "and score" + maxClientScore.toString());
-		this.sendDataToClients(2,  "Winner is Client Number " + maxScoreClientNumber.toString() + "and score" + maxClientScore.toString());
+		ArrayList<Integer> winningClients = new ArrayList<>();
+	    if(maxClientScore == this.clientOneScore)
+	    {
+	    	winningClients.add(1);
+	    }
+	    if(maxClientScore == this.clientTwoScore)
+	    {
+	    	winningClients.add(2);
+	    }
+	    if(maxClientScore == this.clientThreeScore)
+	    {
+	    	winningClients.add(3);
+	    }
 		
+		String moreThanOneClient = winningClients.size() > 1 ? "are" : "is";
+		String endAdvertiseWinner = "Winner " + moreThanOneClient + " Client Number ";
+		String EndAdv = "";
+		for (Integer integer : winningClients) {
+			EndAdv += integer + "  ";
+			}
+		endAdvertiseWinner += EndAdv;
+		endAdvertiseWinner += "and score is " + maxClientScore;
+		
+		System.out.println("\n\n" + endAdvertiseWinner + "\n\n");
+		
+		this.sendDataToClients(0,endAdvertiseWinner);
+		this.sendDataToClients(1,endAdvertiseWinner);
+		this.sendDataToClients(2,endAdvertiseWinner);
+		
+	}
+	
+	private int getMaxNumber(int val1, int val2)
+	{
+		if (val1 > val2) {
+			return 0;
+		}
+		else if (val1 < val2) {
+			return 1;
+		}
+		else
+			return -1;
 	}
 	
 	private void closeResources(int clientNumber)
 	{
 		try {
-		
-		System.out.println("Server started");
-
-		System.out.println("Waiting for a client ...");
-
 
 		this.clientOutputStreams[clientNumber].close();
 		
@@ -260,7 +296,7 @@ public class Server
 		
 
 		this.listServer[clientNumber].close();
-		System.out.println("Connection to Client Number " + clientNumber + 1 + " is closed.");
+		System.out.println("Connection to Client Number " + (clientNumber + 1) + " is closed.");
 		
 
 		} catch (IOException e) {
@@ -268,80 +304,6 @@ public class Server
 			e.printStackTrace();
 		}
 	}
-	// constructor with port
-	public Server(int port)
-	{
-		// starts server and waits for a connection
-		try
-		{
-			
-			for (int iPort = 0; iPort < 3; iPort++) {
-				
-				
-			}
-			server = new ServerSocket(port);
-			System.out.println("Server started");
-
-			System.out.println("Waiting for a client ...");
-
-			socket = server.accept();
-			System.out.println("Client accepted");
-
-			// takes input from the client socket
-			in = new DataInputStream(
-				new BufferedInputStream(socket.getInputStream()));
-
-			outClientSocket = new DataOutputStream(
-	                 socket.getOutputStream());
-			String line = "";
-
-			// reads message from client until "Over" is sent
-// Get the 
-				int totalCards_Available = 13;
-				for(int iFetchCards = 1; iFetchCards <= 13; iFetchCards++, totalCards_Available -- ) {
-					
-					
-				    Random random = new Random();
-				    int cardIndex = random.nextInt(totalCards_Available);
-				    Integer cardSelected = cardsAvailable.get(cardIndex);
-				    this.SendDataToClient(outClientSocket, cardSelected.toString());
-				    System.out.println("Card Drawing " + iFetchCards +"\n\nServer :- \nSelected Card is " + cardSelected +" of Spades");
-				try
-				{
-					line = in.readUTF();
-					System.out.println(line);
-					/*
-					String[] clientMessage = line.split("_");
-					int clientNumber = Integer.parseInt(clientMessage[0]);
-					int cardSelectedByClient = Integer.parseInt(clientMessage[1]);  
-					System.out.println(cardSelectedByClient);
-					System.out.println("\nClient :- \nSelected Card is " + cardSelectedByClient +" of Spades");
-					//clientOneSelection.add(cardSelectedByClient);
-					if(cardSelected < cardSelectedByClient)
-						clientOneScore += cardSelected;
-					System.out.println("\nClientScore is " + clientOneScore + "\n\n");*/
-					
-
-				}
-				catch(IOException i)
-				{
-					System.out.println(i);
-				}
-				cardsAvailable.remove(cardIndex);
-				}
-			System.out.println(clientOneScore);
-			System.out.println("Closing connection");
-
-			// close connection
-			socket.close();
-			in.close();
-		}
-		catch(IOException i)
-		{
-			System.out.println(i);
-		}
-	}
-
 	public Server() {
 		// TODO Auto-generated constructor stub
 	}

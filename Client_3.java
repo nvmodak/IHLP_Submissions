@@ -26,7 +26,7 @@ public class Client_3 {
      // establish a connection
      try {
          socket = new Socket(address, port);
-         System.out.println("Connected");
+         System.out.println("Connected to server on port Number " + port);
 
          // takes input from terminal
          input = new DataInputStream(System.in);
@@ -70,9 +70,9 @@ public class Client_3 {
  
     	 int totalCards_Available = 13;
 			for(int iFetchCards = 1; iFetchCards <= 13; iFetchCards++, totalCards_Available -- ) {
-				System.out.println("Turn - " + iFetchCards);
+				System.out.println("\n\nTurn - " + iFetchCards + "\n\n");
 				String dataReceived = this.GetServerInput(inputSocket);
-				System.out.println("data received from server " + dataReceived);
+				
 				int advertisedCardFromServer = Integer.parseInt(dataReceived);
 				System.out.println("Server has Selected Card " + advertisedCardFromServer +" of Spades");
 			    Random random = new Random();
@@ -100,6 +100,7 @@ public class Client_3 {
          outSocket.close();
          inputSocket.close();
          socket.close();
+         System.out.println("Connection with server closed");
      }
      catch (IOException i) {
          System.out.println(i);
