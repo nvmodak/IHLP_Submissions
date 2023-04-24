@@ -159,7 +159,7 @@ public class Server
 		    int clientOneCardSelected = 0;
 		    int clientTwoCardSelected = 0;
 		    int clientThreeCardSelected = 0;
-		    System.out.println("Server has selected card is " + card);
+		    System.out.println("Server has selected card is " + card + " of Spades");
 		    // Send and receive data from client
 		    System.out.println("Client 1 dealing");
 		    this.sendDataToClients(0, card);
