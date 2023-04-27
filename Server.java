@@ -212,7 +212,7 @@ public class Server
 		    }
 		    if(maxNumber == clientThreeCardSelected)
 		    {
-		    	System.out.println("Client 2 has max score in round " + iFetchCards);
+		    	System.out.println("Client 3 has max score in round " + iFetchCards);
 		    	this.clientThreeScore += cardSelected;
 		    }
 		    
